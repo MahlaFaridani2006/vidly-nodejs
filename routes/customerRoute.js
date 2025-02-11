@@ -1,4 +1,4 @@
-const { Customer, validation } = require("../models/customer");
+const { Customer, validateCustomer } = require("../models/customer");
 const express = require("express");
 const router = express.Router();
 
@@ -9,7 +9,7 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const { error } = validation(req.body);
+  const { error } = validateCustomer(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
   let customer = new Customer({

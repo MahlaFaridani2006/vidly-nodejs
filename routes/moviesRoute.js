@@ -1,17 +1,17 @@
 const mongoose = require('mongoose');
 const exp = require('express');
-const { validation, Movie } = require('../models/movies');
+const { validationMovie, Movie } = require('../models/movies');
 const { Genre } = require('../models/genres');
 const rout = exp.Router();
 rout.get('/', async (req, res) => {
     res.send(await Movie.find().sort('title'));
 })
 rout.post('/', async (req, res) => {
-    const {err} = validation(req.body);
+    const {err} = validationMovie(req.body);
     if (err) return res.status(400).send(err.details[0].message);
     const genreId=await Genre.findById(req.body.genreId);
     if(!genreId)return res.status(400).send('invalid genre');
-    let movie=new Movie({
+    const movie=new Movie({
         title:req.body.title,
         genre:{_id:genreId,genreName:req.body.genreName},
         numberInStock:req.body.numberInStock,

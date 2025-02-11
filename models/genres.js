@@ -17,5 +17,5 @@ function validationGenre(genre){
     return schema.validate(genre);
 }
 exports.genreSchema=genreSchema;
-exports.validation=validationGenre;
+exports.validationGenre=validationGenre;
 exports.Genre=Genre;

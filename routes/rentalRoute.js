@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Fawn=require('../node_modules/fawn');
 
-const { Rental,validation } = require('../models/rental');
+const { Rental,validateRental } = require('../models/rental');
 const { Movie } = require('../models/movies');
 const { Customer } = require('../models/customer');
 Fawn.init('mongodb://localhost:27017/genre');
@@ -13,7 +13,7 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-    const { error } = validation(req.body);
+    const { error } = validateRental(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
     const customer = await Customer.findById(req.body.customerId);
@@ -44,10 +44,9 @@ router.post("/", async (req, res) => {
         "movies",
         { _id: movie._id },
         {
-          $inc: { numberInStock: -1 }
+          $inc: {numberInStock:-1 }
         }
-      )
-      .run();
+      ).run();
 
     res.send(rental);
   } catch (ex) {

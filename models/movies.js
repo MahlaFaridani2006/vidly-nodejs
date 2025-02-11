@@ -31,11 +31,11 @@ const Movie = mongoose.model('MovieModel', new mongoose.Schema({
 function validationMovie(movie) {
     const schema =joi.object( {
         title: joi.string().min(5).max(100).required(),
-        genreId: joi.string().required(),
+        genreId: joi.objectId().required(),
         numberInStock: joi.number().min(0).required(),
         dailyRentalRate: joi.number().min(0).required(),
     })
     return schema.validate(movie);
 }
-exports.validation = validationMovie;
+exports.validationMovie= validationMovie;
 exports.Movie = Movie;
