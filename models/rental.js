@@ -2,7 +2,7 @@ const Joi = require('joi');
 const mongoose = require('mongoose');
 
 const rentalSchema = new mongoose.Schema({
-  customer: { 
+  customer: {
     type: new mongoose.Schema({
       name: {
         type: String,
@@ -17,8 +17,8 @@ const rentalSchema = new mongoose.Schema({
         type: String,
         required: true,
         minlength: 5,
-      }      
-    }),  
+      }
+    }),
     required: true
   },
   movie: {
@@ -26,29 +26,29 @@ const rentalSchema = new mongoose.Schema({
       title: {
         type: String,
         required: true,
-        trim: true, 
+        trim: true,
         minlength: 5,
         maxlength: 255
       },
-      dailyRentalRate: { 
-        type: Number, 
+      dailyRentalRate: {
+        type: Number,
         required: true,
         min: 0,
         max: 255
-      }   
+      }
     }),
     required: true
   },
-  dateOut: { 
-    type: Date, 
+  dateOut: {
+    type: Date,
     required: true,
     default: Date.now
   },
-  dateReturned: { 
+  dateReturned: {
     type: Date
   },
-  rentalFee: { 
-    type: Number, 
+  rentalFee: {
+    type: Number,
     min: 0
   }
 });
@@ -62,5 +62,5 @@ function validateRental(rental) {
   return schema.validate(rental);
 }
 
-exports.Rental =Rental; 
-exports.validateRental= validateRental;
+exports.Rental = Rental;
+exports.validateRental = validateRental;

@@ -1,3 +1,4 @@
+const error=require('./middleware/error')
 const joi=require('joi');
 joi.objectId=require('joi-objectid')(joi)
 const mongoose=require('mongoose');
@@ -30,6 +31,6 @@ app.use('/rentals',rental);
 app.use('/users',user);
 app.use('/auth',auth);
 app.use('/genres',genre);
-
+app.use(error)
 const port=process.env.PORT || 4000
 app.listen(port) 

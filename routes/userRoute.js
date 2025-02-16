@@ -1,10 +1,15 @@
 const _ = require('lodash');
 const express = require('express');
 const router = express.Router();
-const bcrybt=require('bcrypt')
+const bcrybt = require('bcrypt')
 const { User, validationUser } = require('../models/user');
-const config=require('config');
-const jwt=require('jsonwebtoken');
+const config = require('config');
+const jwt = require('jsonwebtoken');
+const auth = require('../middleware/auth')
+router.get('/me', auth, async (req, res) => {
+    const user = User.findById(req.user._id).select('-password');
+    res.send(user);
+})
 router.post('/', async (req, res) => {
     const { error } = validationUser(req.body);  // Corrected error variable
     if (error) return res.status(400).send(error.details[0].message);
@@ -15,14 +20,14 @@ router.post('/', async (req, res) => {
     user = new User(
         _.pick(req.body, ['name', 'email', 'password'])
     );
-    const salt=await bcrybt.genSalt(10);
-    const hash=await bcrybt.hash(user.password,salt);
-    user.password=hash
+    const salt = await bcrybt.genSalt(10);
+    const hash = await bcrybt.hash(user.password, salt);
+    user.password = hash
     await user.save();
-    const token=user.generateAuthToken();
+    const token = user.generateAuthToken();
 
 
-    res.header('x-auth-token',token).send(_.pick(user, ['_id', 'name', 'email']));
+    res.header('x-auth-token', token).send(_.pick(user, ['_id', 'name', 'email']));
 });
 
 module.exports = router;

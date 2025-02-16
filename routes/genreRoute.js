@@ -1,16 +1,19 @@
-const auth = require("../middleware/auth");
-const { Genre,validationGenre } =require('../models/genres')
+// const asyncMiddleware=require('../middleware/async')
+require('express-async-errors')
+const { Genre, validationGenre } = require('../models/genres');
 const mongoose = require("mongoose");
 const express = require("express");
 const router = express.Router();
+const auth = require("../middleware/auth");
+const admin = require('../middleware/admin');
 
-router.get("/", async (req, res) => {
+router.get("/",async (req, res) => {
   const genres = await Genre.find()
     .select("name")
   res.send(genres);
 });
 
-router.post("/",auth, async (req, res) => {
+router.post("/", auth,async (req, res) => {
   const { error } = validationGenre(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
@@ -38,7 +41,7 @@ router.put("/:id", async (req, res) => {
   res.send(genre);
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", [auth, admin], async (req, res) => {
   const genre = await Genre.findByIdAndDelete(req.params.id);
 
   if (!genre)
