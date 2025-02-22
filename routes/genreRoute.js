@@ -7,13 +7,17 @@ const router = express.Router();
 const auth = require("../middleware/auth");
 const admin = require('../middleware/admin');
 
-router.get("/",async (req, res) => {
-  const genres = await Genre.find()
-    .select("name")
-  res.send(genres);
+router.get("/", async (req, res) => {
+  // throw new Error({err:'could not get the genres !'});
+  try {
+    // const genres = await Genre.find().sort("names");
+    res.send(genres);
+  } catch (err) {
+    res.status(500).send({ error: 'Could not get the genres!' });
+  }
 });
 
-router.post("/", auth,async (req, res) => {
+router.post("/", auth, async (req, res) => {
   const { error } = validationGenre(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
